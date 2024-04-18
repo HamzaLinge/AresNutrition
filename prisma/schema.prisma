@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  supplements Supplement[]
+}
+
+model Supplement {
+  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                   String
+  priceInDinars          Int
+  stock                  Int      @default(0)
+  description            String
+  thumbnailPaths         String[]
+  isAvailableForPurchase Boolean  @default(true)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  categoryId String   @db.ObjectId
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  orders OrderSupplement[]
+}
+
+model OrderSupplement {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  orderId String @db.ObjectId
+  orders  Order  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  supplementId String     @db.ObjectId
+  supplements  Supplement @relation(fields: [supplementId], references: [id], onDelete: Restrict)
+
+  priceInDinars Int
+  quantity      Int
+
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  amountInDinars Int
+
+  chargilyWebhookId  String?
+  chargilyCheckoutId String  @unique
+  paymentStatus      String  @default("pending") // Such as 'pending', 'paid', 'failed'
+  paymentMethod      String  @default("edahabiya") // Such as 'edahabia', 'cib'
+
+  shippingName    String
+  shippingPhone   String
+  shippingWilaya  String
+  shippingAddress String
+
+  metadata Json? // JSON field to store any additional data from Chargily or other sources
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  supplements OrderSupplement[]
+}
