@@ -1,5 +1,5 @@
-import { AdminPageHeader } from "@/app/admin/_components/AdminPageHeader";
 import CategoryForm from "@/app/admin/categories/_components/CategoryForm";
+import PageHeader from "@/components/PageHeader";
 import db from "@/db/db";
 
 export default async function EditCategoryPage({
@@ -11,7 +11,7 @@ export default async function EditCategoryPage({
 
   return (
     <>
-      <AdminPageHeader>Edit Category</AdminPageHeader>
+      <PageHeader>Edit Category</PageHeader>
       <CategoryForm category={category} />
     </>
   );

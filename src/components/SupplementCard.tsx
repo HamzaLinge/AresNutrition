@@ -29,8 +29,13 @@ export function SupplementCard({
   return (
     <Card className="flex overflow-hidden flex-col">
       <Link href={`/supplements/${id}`}>
-        <div className="relative w-full h-auto aspect-video">
-          <Image src={thumbnail} fill alt={name} />
+        <div className="relative w-full aspect-square">
+          <Image
+            src={thumbnail}
+            fill
+            alt={name}
+            style={{ objectFit: "cover" }}
+          />
         </div>
       </Link>
       <CardHeader>

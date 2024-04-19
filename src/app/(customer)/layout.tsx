@@ -1,4 +1,4 @@
-import { Navigation, NavLink } from "@/components/Navigation";
+import NavigationCustomer from "@/app/(customer)/_components/NavigationCustomer";
 
 export const dynamic = "force-dynamic"; // To force Next.js not to cache
 
@@ -9,11 +9,7 @@ function CustomerLayout({
 }>) {
   return (
     <>
-      <Navigation>
-        <NavLink href="/">Home</NavLink>
-        <NavLink href="/supplements">Supplements</NavLink>
-        <NavLink href="/orders">My Orders</NavLink>
-      </Navigation>
+      <NavigationCustomer />
       <div className="container my-6">{children}</div>
     </>
   );
