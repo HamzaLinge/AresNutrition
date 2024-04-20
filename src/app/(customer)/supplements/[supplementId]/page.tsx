@@ -44,7 +44,7 @@ export default async function SupplementPage({
     await getSupplementData(supplementId);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 container mt-6 mb-20">
       <Breadcrumb className="flex justify-center">
         <BreadcrumbList>
           <BreadcrumbItem>

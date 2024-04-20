@@ -7,6 +7,7 @@ import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { Supplement } from "@prisma/client";
 import { ArrowRightIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -36,15 +37,25 @@ const getNewestSupplements = cache(
 
 export default function HomePage() {
   return (
-    <main className="space-y-12">
-      <SupplementGridSection
-        title="Most Popular"
-        supplementFetcher={getMostPopularSupplements}
-      />
-      <SupplementGridSection
-        title="Newest"
-        supplementFetcher={getNewestSupplements}
-      />
+    <main className="">
+      <section className="relative aspect-video">
+        <Image
+          src={"/home-cover.jpg"}
+          alt={"home-cover"}
+          fill
+          style={{ objectFit: "cover" }}
+        />
+      </section>
+      <section className="container my-12 space-y-8">
+        <SupplementGridSection
+          title="Most Popular"
+          supplementFetcher={getMostPopularSupplements}
+        />
+        <SupplementGridSection
+          title="Newest"
+          supplementFetcher={getNewestSupplements}
+        />
+      </section>
     </main>
   );
 }

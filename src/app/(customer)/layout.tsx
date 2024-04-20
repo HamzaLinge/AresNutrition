@@ -1,4 +1,5 @@
 import NavigationCustomer from "@/app/(customer)/_components/NavigationCustomer";
+import Footer from "@/app/(customer)/_components/Footer";
 
 export const dynamic = "force-dynamic"; // To force Next.js not to cache
 
@@ -10,7 +11,10 @@ function CustomerLayout({
   return (
     <>
       <NavigationCustomer />
-      <div className="container my-6">{children}</div>
+      <div>
+        {children}
+        <Footer />
+      </div>
     </>
   );
 }

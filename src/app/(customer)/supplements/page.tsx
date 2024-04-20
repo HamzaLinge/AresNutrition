@@ -14,6 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Filter from "@/app/(customer)/supplements/_components/Filter";
 
 const getSupplements = cache(
   () => {
@@ -28,7 +29,7 @@ const getSupplements = cache(
 
 export default function SupplementsPage() {
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 container my-6">
       <Breadcrumb className="flex items-center justify-center">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -40,6 +41,8 @@ export default function SupplementsPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
+      <Filter />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Suspense

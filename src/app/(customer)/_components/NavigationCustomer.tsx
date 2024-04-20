@@ -29,9 +29,6 @@ export default function NavigationCustomer() {
       <div className="flex items-center">
         <NavCustomerLink href={"/"}> Home</NavCustomerLink>
         <NavCustomerLink href="/supplements">Shop</NavCustomerLink>
-        <NavCustomerLink href="/orders">My Order</NavCustomerLink>
-        <NavCustomerLink href="/contact">Contact</NavCustomerLink>
-        <NavCustomerLink href="/about-us">About Us</NavCustomerLink>
       </div>
       <div>
         <ShoppingCart />
