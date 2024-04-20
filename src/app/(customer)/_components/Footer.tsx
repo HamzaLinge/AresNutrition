@@ -11,7 +11,7 @@ import { MdPrivacyTip, MdPlace } from "react-icons/md";
 
 export default function Footer() {
   return (
-    <footer className="flex flex-col p-12 items-center gap-y-12 bg-primary text-primary-foreground/75 text-sm">
+    <footer className="flex flex-col p-12 items-center gap-y-12 bg-primary text-primary-foreground/75 text-sm mt-72">
       <div className="flex justify-evenly w-full">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Customer</h3>

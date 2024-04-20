@@ -29,6 +29,7 @@ export default function NavigationCustomer() {
       <div className="flex items-center">
         <NavCustomerLink href={"/"}> Home</NavCustomerLink>
         <NavCustomerLink href="/supplements">Shop</NavCustomerLink>
+        <NavCustomerLink href="/orders">My Orders</NavCustomerLink>
       </div>
       <div>
         <ShoppingCart />
@@ -45,7 +46,7 @@ function NavCustomerLink(
     <Link
       {...props}
       className={cn(
-        "p-3 m-1 rounded hover:bg-secondary-foreground/85 text-nowrap hover:text-secondary/85 focus-visible:bg-secondary-foreground focus-visible:text-secondary",
+        "p-3 w-32 text-center m-1 rounded hover:bg-secondary-foreground/50 text-nowrap hover:text-secondary focus-visible:bg-secondary-foreground focus-visible:text-secondary",
         pathname === props.href && "bg-primary text-background"
       )}
     />

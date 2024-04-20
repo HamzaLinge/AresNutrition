@@ -1,11 +1,9 @@
+import Filter from "@/app/(customer)/supplements/_components/Filter";
 import PageHeader from "@/components/PageHeader";
 import {
   SupplementCard,
   SupplementCardSkeleton,
 } from "@/components/SupplementCard";
-import db from "@/db/db";
-import { cache } from "@/lib/cache";
-import { Suspense } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,12 +12,32 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Filter from "@/app/(customer)/supplements/_components/Filter";
+import db from "@/db/db";
+import { cache } from "@/lib/cache";
+import { Prisma } from "@prisma/client";
+import { Suspense } from "react";
 
 const getSupplements = cache(
-  () => {
+  (searchParams: Record<string, string>) => {
+    const whereClause: Prisma.SupplementWhereInput = {
+      isAvailableForPurchase: true,
+    };
+
+    if (searchParams.categoryId) {
+      whereClause.categoryId = searchParams.categoryId;
+    }
+
+    if (searchParams.minPrice && searchParams.maxPrice) {
+      whereClause.priceInDinars = {
+        gte: parseInt(searchParams.minPrice, 10),
+        lte: parseInt(searchParams.maxPrice, 10),
+      };
+    }
+
+    // console.log("Querying Supplements with:", whereClause);
+
     return db.supplement.findMany({
-      where: { isAvailableForPurchase: true },
+      where: whereClause,
       orderBy: { createdAt: "desc" },
     });
   },
@@ -27,7 +45,11 @@ const getSupplements = cache(
   //   { revalidate: 60 * 60 * 24 }
 );
 
-export default function SupplementsPage() {
+export default function SupplementsPage({
+  searchParams,
+}: {
+  searchParams: Record<string, string>;
+}) {
   return (
     <div className="space-y-10 container my-6">
       <Breadcrumb className="flex items-center justify-center">
@@ -41,6 +63,10 @@ export default function SupplementsPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
+      <div className="w-full text-center">
+        <PageHeader>Shop</PageHeader>
+      </div>
 
       <Filter />
 
@@ -57,15 +83,20 @@ export default function SupplementsPage() {
             </>
           }
         >
-          <SupplementsSuspense />
+          <SupplementsSuspense searchParams={searchParams} />
         </Suspense>
       </div>
     </div>
   );
 }
 
-async function SupplementsSuspense() {
-  const supplements = await getSupplements();
+async function SupplementsSuspense({
+  searchParams,
+}: {
+  searchParams: Record<string, string>;
+}) {
+  const supplements = await getSupplements(searchParams);
+
   return supplements.map((supplement) => (
     <SupplementCard
       key={supplement.id}
