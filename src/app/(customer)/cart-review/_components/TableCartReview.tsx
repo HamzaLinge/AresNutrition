@@ -39,7 +39,7 @@ export default function TableCartReview() {
     return (
       <div className="gap-y-2 flex flex-col items-center">
         <p className="text-muted-foreground text-center">
-          You didn't pick any supplement yet!
+          You didn&apos;t pick any supplement yet!
         </p>
         <Button asChild size="lg">
           <Link href="supplements" className="space-x-2">

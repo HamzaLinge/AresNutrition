@@ -92,7 +92,7 @@ function ShoppingCart() {
           {cartSupplements.length === 0 ? (
             <div className="space-y-2">
               <p className="text-muted-foreground text-center">
-                You didn't pick any supplement yet!
+                You didn&apos;t pick any supplement yet!
               </p>
               <SheetFooter>
                 <SheetClose asChild>

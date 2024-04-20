@@ -29,7 +29,7 @@ export default function AddToCart({ supplement }: { supplement: Supplement }) {
       <Button
         size={"lg"}
         onClick={() => addSupplementToChoppingCart(supplement)}
-        disabled={quantityPicked > 0}
+        disabled={supplement.stock === 0 || quantityPicked > 0}
         className="h-12 w-full space-x-2"
       >
         <ShoppingCartIcon />
