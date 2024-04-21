@@ -5,6 +5,7 @@ import { formDataToObject } from "@/lib/utils";
 import fs from "fs/promises";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
+import path from "path";
 import { z } from "zod";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
@@ -37,22 +38,32 @@ export async function addSupplement(prevState: unknown, formData: FormData) {
 
   let thumbnailPaths: string[] = [];
   try {
-    const publicDirPath =
-      (process.env.VERCEL_ENV === "production" ? process.cwd() : "") +
-      "/public";
+    const publicDirPath = path.join(process.cwd(), "public");
 
-    await fs.mkdir(`${publicDirPath}/supplements`, { recursive: true });
+    console.log({ supplementsPath: path.join(publicDirPath, "supplements") });
+
+    await fs.mkdir(path.join(publicDirPath, "supplements"), {
+      recursive: true,
+    });
 
     for (let i = 0; i < data.thumbnails.length; i++) {
       const thumbnailPath = `/supplements/${crypto.randomUUID()}-${data.thumbnails[i].name}`;
+      // await fs.writeFile(
+      //   `public${thumbnailPath}`,
+      //   Buffer.from(await data.thumbnails[i].arrayBuffer())
+      // );
+      console.log({
+        thumbnailPath: `${i}-${path.join(publicDirPath, thumbnailPath)}`,
+      });
+
       await fs.writeFile(
-        `${publicDirPath}${thumbnailPath}`,
+        path.join(publicDirPath, thumbnailPath),
         Buffer.from(await data.thumbnails[i].arrayBuffer())
       );
       thumbnailPaths.push(thumbnailPath);
     }
   } catch (error) {
-    console.error(error);
+    console.error({ fileError: error });
     throw new Error("Parameter is not a number!");
   }
   await db.supplement.create({
