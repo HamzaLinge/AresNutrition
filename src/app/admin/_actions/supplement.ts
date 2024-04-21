@@ -81,8 +81,6 @@ export async function updateSupplement(
   prevState: unknown,
   formData: FormData
 ) {
-  console.log(formDataToObject(formData));
-
   const result = editSupplementSchema.safeParse(formDataToObject(formData));
   console.log(result);
 
