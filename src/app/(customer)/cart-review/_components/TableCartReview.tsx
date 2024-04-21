@@ -76,7 +76,7 @@ export default function TableCartReview() {
             <TableRow key={food.id}>
               <TableCell>
                 <Link href={`/supplements/${food.id}`}>
-                  <div className="relative aspect-square rounded overflow-hidden">
+                  <div className="relative w-20 aspect-square rounded overflow-hidden">
                     <Image
                       src={food.thumbnailPaths[0]}
                       alt={food.name}
@@ -113,9 +113,9 @@ export default function TableCartReview() {
         </span>
       </div>
       <div className="w-full flex items-center justify-center">
-        <Button asChild size={"lg"} className="h-12 w-72">
-          <Link href={"/checkout"} className="space-x-2">
-            <CreditCardIcon />
+        <Button asChild size={"lg"} className="h-12 w-full">
+          <Link href={"/checkout"} className="space-x-4">
+            <CreditCardIcon size={22} />
             <span>Checkout</span>
           </Link>
         </Button>

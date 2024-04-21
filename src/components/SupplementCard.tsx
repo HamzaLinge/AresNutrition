@@ -35,6 +35,9 @@ export function SupplementCard({
             fill
             alt={name}
             style={{ objectFit: "cover" }}
+            sizes={
+              "(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33.33vw, 30vw"
+            }
           />
         </div>
       </Link>

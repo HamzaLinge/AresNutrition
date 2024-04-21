@@ -16,37 +16,87 @@ import { formatCurrency, formatNumber } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { CartSupplement } from "@/store/cart-store";
 import { useCartStore } from "@/store/cart-store-provider";
-import { ShoppingCartIcon, StoreIcon } from "lucide-react";
+import {
+  MenuIcon,
+  NavigationIcon,
+  ShoppingCartIcon,
+  StoreIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ComponentProps } from "react";
 
-export default function NavigationCustomer() {
+export default function LayoutCustomer() {
   return (
-    <nav className="grid grid-cols-3 bg-accent justify-items-center place-items-center shadow">
+    <header className="grid grid-cols-3 bg-accent justify-items-center place-items-center shadow sticky top-0 left-0 z-10">
+      <NavMobile />
       <p>Logo</p>
-      <div className="flex items-center">
-        <NavCustomerLink href={"/"}> Home</NavCustomerLink>
-        <NavCustomerLink href="/supplements">Shop</NavCustomerLink>
-        <NavCustomerLink href="/orders">My Orders</NavCustomerLink>
-      </div>
+      <NavigationDesktop />
       <div>
         <ShoppingCart />
       </div>
+    </header>
+  );
+}
+
+function NavigationDesktop() {
+  return (
+    <nav className="hidden items-center lg:flex">
+      <NavDesktopLink href={"/"}> Home</NavDesktopLink>
+      <NavDesktopLink href="/supplements">Shop</NavDesktopLink>
+      <NavDesktopLink href="/orders">My Orders</NavDesktopLink>
     </nav>
   );
 }
 
-function NavCustomerLink(
-  props: Omit<ComponentProps<typeof Link>, "className">
-) {
+function NavDesktopLink(props: Omit<ComponentProps<typeof Link>, "className">) {
   const pathname = usePathname();
   return (
     <Link
       {...props}
       className={cn(
         "p-3 w-32 text-center m-1 rounded hover:bg-secondary-foreground/50 text-nowrap hover:text-secondary focus-visible:bg-secondary-foreground focus-visible:text-secondary",
+        pathname === props.href && "bg-primary text-background"
+      )}
+    />
+  );
+}
+
+function NavMobile() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant={"ghost"} size={"icon"} className="lg:hidden my-2">
+          <MenuIcon />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side={"left"} className="px-0">
+        <SheetHeader>
+          <SheetTitle asChild>
+            <p className="flex items-center gap-x-4 px-4 justify-center">
+              <NavigationIcon />
+              <span>Navigation</span>
+            </p>
+          </SheetTitle>
+        </SheetHeader>
+        <nav className="flex flex-col mt-10 w-full divide-y">
+          <NavMobileLink href={"/"}> Home</NavMobileLink>
+          <NavMobileLink href="/supplements">Shop</NavMobileLink>
+          <NavMobileLink href="/orders">My Orders</NavMobileLink>
+        </nav>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function NavMobileLink(props: Omit<ComponentProps<typeof Link>, "className">) {
+  const pathname = usePathname();
+  return (
+    <Link
+      {...props}
+      className={cn(
+        "p-4 text-center hover:bg-secondary-foreground/50 text-nowrap hover:text-secondary focus-visible:bg-secondary-foreground focus-visible:text-secondary",
         pathname === props.href && "bg-primary text-background"
       )}
     />

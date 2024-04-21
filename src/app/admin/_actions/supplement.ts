@@ -40,7 +40,7 @@ export async function addSupplement(prevState: unknown, formData: FormData) {
   try {
     const publicDirPath = path.join(process.cwd(), "public");
 
-    console.log({ supplementsPath: path.join(publicDirPath, "supplements") });
+    // console.log({ supplementsPath: path.join(publicDirPath, "supplements") });
 
     await fs.mkdir(path.join(publicDirPath, "supplements"), {
       recursive: true,
@@ -52,9 +52,9 @@ export async function addSupplement(prevState: unknown, formData: FormData) {
       //   `public${thumbnailPath}`,
       //   Buffer.from(await data.thumbnails[i].arrayBuffer())
       // );
-      console.log({
-        thumbnailPath: `${i}-${path.join(publicDirPath, thumbnailPath)}`,
-      });
+      // console.log({
+      //   thumbnailPath: `${i}-${path.join(publicDirPath, thumbnailPath)}`,
+      // });
 
       await fs.writeFile(
         path.join(publicDirPath, thumbnailPath),

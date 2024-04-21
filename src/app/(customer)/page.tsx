@@ -7,9 +7,16 @@ import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { Supplement } from "@prisma/client";
 import { ArrowRightIcon } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Home - Ares Store",
+  description:
+    "Ares Store Nutrition Supplement Food by Ares Gym Mostaganem powered by Hamza",
+};
 
 const getMostPopularSupplements = cache(
   () => {
