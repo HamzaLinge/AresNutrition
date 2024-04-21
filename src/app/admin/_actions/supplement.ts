@@ -35,17 +35,25 @@ export async function addSupplement(prevState: unknown, formData: FormData) {
   }
   const data = result.data;
 
-  await fs.mkdir("public/supplements", { recursive: true });
   let thumbnailPaths: string[] = [];
-  for (let i = 0; i < data.thumbnails.length; i++) {
-    const thumbnailPath = `/supplements/${crypto.randomUUID()}-${data.thumbnails[i].name}`;
-    await fs.writeFile(
-      `public${thumbnailPath}`,
-      Buffer.from(await data.thumbnails[i].arrayBuffer())
-    );
-    thumbnailPaths.push(thumbnailPath);
-  }
+  try {
+    const publicDirPath =
+      (process.env.NODE_ENV === "production" ? process.cwd() : "") + "/public";
 
+    await fs.mkdir(`${publicDirPath}/supplements`, { recursive: true });
+
+    for (let i = 0; i < data.thumbnails.length; i++) {
+      const thumbnailPath = `/supplements/${crypto.randomUUID()}-${data.thumbnails[i].name}`;
+      await fs.writeFile(
+        `${publicDirPath}${thumbnailPath}`,
+        Buffer.from(await data.thumbnails[i].arrayBuffer())
+      );
+      thumbnailPaths.push(thumbnailPath);
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error("Parameter is not a number!");
+  }
   await db.supplement.create({
     data: {
       name: data.name,
