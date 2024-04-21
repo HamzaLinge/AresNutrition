@@ -38,7 +38,8 @@ export async function addSupplement(prevState: unknown, formData: FormData) {
   let thumbnailPaths: string[] = [];
   try {
     const publicDirPath =
-      (process.env.NODE_ENV === "production" ? process.cwd() : "") + "/public";
+      (process.env.VERCEL_ENV === "production" ? process.cwd() : "") +
+      "/public";
 
     await fs.mkdir(`${publicDirPath}/supplements`, { recursive: true });
 
@@ -81,8 +82,6 @@ export async function updateSupplement(
   prevState: unknown,
   formData: FormData
 ) {
-  console.log(formDataToObject(formData));
-
   const result = editSupplementSchema.safeParse(formDataToObject(formData));
   console.log(result);
 
