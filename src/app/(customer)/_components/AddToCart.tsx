@@ -22,7 +22,7 @@ export default function AddToCart({ supplement }: { supplement: Supplement }) {
   }));
 
   return (
-    <div className="space-y-2 w-72">
+    <div className="space-y-2 w-full">
       {quantityPicked >= supplement.stock && (
         <p className="text-destructive text-sm">Out of stock</p>
       )}

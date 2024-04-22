@@ -1,5 +1,5 @@
 import db from "@/db/db";
-import FilterDesktop from "./FilterDesktop";
+import FilterForm from "./FilterForm";
 
 export default async function Filter() {
   const categories = await db.category.findMany({ orderBy: { name: "asc" } });
@@ -8,14 +8,12 @@ export default async function Filter() {
     _max: { priceInDinars: true },
   });
   return (
-    <div>
-      <FilterDesktop
-        categories={categories}
-        rangePrice={{
-          min: rangePrice._min.priceInDinars || 0,
-          max: rangePrice._max.priceInDinars || 0,
-        }}
-      />
-    </div>
+    <FilterForm
+      categories={categories}
+      rangePrice={{
+        min: rangePrice._min.priceInDinars || 0,
+        max: rangePrice._max.priceInDinars || 10000,
+      }}
+    />
   );
 }

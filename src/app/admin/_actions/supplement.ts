@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import path from "path";
 import { z } from "zod";
+import os from "os";
+import { cloudinaryUploadImage } from "@/services/cloudinary";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 const thumbnailSchema = fileSchema.refine(
@@ -37,35 +39,46 @@ export async function addSupplement(prevState: unknown, formData: FormData) {
   const data = result.data;
 
   let thumbnailPaths: string[] = [];
-  try {
-    const publicDirPath = path.join(process.cwd(), "public");
+  const tmpDir = os.tmpdir(); // Get the OS-specific temporary directory, usually /tmp on Unix-based systems
 
-    console.log({ supplementsPath: path.join(publicDirPath, "supplements") });
+  for (let i = 0; i < data.thumbnails.length; i++) {
+    const file = data.thumbnails[i];
+    const tmpFilePath = path.join(
+      tmpDir,
+      `${crypto.randomUUID()}-${file.name}`
+    );
+    await fs.writeFile(tmpFilePath, Buffer.from(await file.arrayBuffer()));
 
-    await fs.mkdir(path.join(publicDirPath, "supplements"), {
-      recursive: true,
-    });
+    // Now upload the image from the tmp location to Cloudinary
+    const cloudinaryPath = await cloudinaryUploadImage(tmpFilePath);
+    thumbnailPaths.push(cloudinaryPath);
 
-    for (let i = 0; i < data.thumbnails.length; i++) {
-      const thumbnailPath = `/supplements/${crypto.randomUUID()}-${data.thumbnails[i].name}`;
-      // await fs.writeFile(
-      //   `public${thumbnailPath}`,
-      //   Buffer.from(await data.thumbnails[i].arrayBuffer())
-      // );
-      console.log({
-        thumbnailPath: `${i}-${path.join(publicDirPath, thumbnailPath)}`,
-      });
-
-      await fs.writeFile(
-        path.join(publicDirPath, thumbnailPath),
-        Buffer.from(await data.thumbnails[i].arrayBuffer())
-      );
-      thumbnailPaths.push(thumbnailPath);
-    }
-  } catch (error) {
-    console.error({ fileError: error });
-    throw new Error("Parameter is not a number!");
+    // Optionally delete the file after upload to clean up space
+    await fs.unlink(tmpFilePath);
   }
+  // try {
+  //   const publicDirPath = path.join(process.cwd(), "public");
+
+  //   // console.log({ supplementsPath: path.join(publicDirPath, "supplements") });
+
+  //   await fs.mkdir(path.join(publicDirPath, "supplements"), {
+  //     recursive: true,
+  //   });
+
+  //   for (let i = 0; i < data.thumbnails.length; i++) {
+  //     const thumbnailPath = `/supplements/${crypto.randomUUID()}-${data.thumbnails[i].name}`;
+  //     await fs.writeFile(
+  //       path.join(publicDirPath, thumbnailPath),
+  //       Buffer.from(await data.thumbnails[i].arrayBuffer())
+  //     );
+  //     // const thumbnailPath = await uploadImage(data.thumbnails[i]);
+  //     thumbnailPaths.push(thumbnailPath);
+  //   }
+  // } catch (error) {
+  //   console.error({ fileError: error });
+  //   throw new Error("Parameter is not a number!");
+  // }
+
   await db.supplement.create({
     data: {
       name: data.name,

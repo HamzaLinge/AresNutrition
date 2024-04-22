@@ -1,4 +1,3 @@
-import Filter from "@/app/(customer)/supplements/_components/Filter";
 import PageHeader from "@/components/PageHeader";
 import {
   SupplementCard,
@@ -16,6 +15,14 @@ import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { Prisma } from "@prisma/client";
 import { Suspense } from "react";
+import Filter from "./_components/Filter";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shop - Ares Store",
+  description:
+    "Shop Supplement Food for Athlete Enthusiasts at Ares Gym Mostaganem",
+};
 
 const getSupplements = cache(
   (searchParams: Record<string, string>) => {
