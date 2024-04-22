@@ -24,33 +24,29 @@ export const metadata: Metadata = {
     "Shop Supplement Food for Athlete Enthusiasts at Ares Gym Mostaganem",
 };
 
-const getSupplements = cache(
-  (searchParams: Record<string, string>) => {
-    const whereClause: Prisma.SupplementWhereInput = {
-      isAvailableForPurchase: true,
+const getSupplements = (searchParams: Record<string, string>) => {
+  const whereClause: Prisma.SupplementWhereInput = {
+    isAvailableForPurchase: true,
+  };
+
+  if (searchParams.categoryId) {
+    whereClause.categoryId = searchParams.categoryId;
+  }
+
+  if (searchParams.minPrice && searchParams.maxPrice) {
+    whereClause.priceInDinars = {
+      gte: parseInt(searchParams.minPrice, 10),
+      lte: parseInt(searchParams.maxPrice, 10),
     };
+  }
 
-    if (searchParams.categoryId) {
-      whereClause.categoryId = searchParams.categoryId;
-    }
+  // console.log("Querying Supplements with:", whereClause);
 
-    if (searchParams.minPrice && searchParams.maxPrice) {
-      whereClause.priceInDinars = {
-        gte: parseInt(searchParams.minPrice, 10),
-        lte: parseInt(searchParams.maxPrice, 10),
-      };
-    }
-
-    // console.log("Querying Supplements with:", whereClause);
-
-    return db.supplement.findMany({
-      where: whereClause,
-      orderBy: { createdAt: "desc" },
-    });
-  },
-  ["/supplements", "getSupplements"]
-  //   { revalidate: 60 * 60 * 24 }
-);
+  return db.supplement.findMany({
+    where: whereClause,
+    orderBy: { createdAt: "desc" },
+  });
+};
 
 export default function SupplementsPage({
   searchParams,

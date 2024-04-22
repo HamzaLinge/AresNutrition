@@ -1,25 +1,5 @@
 "use client";
 
-import { useCartStore } from "@/store/cart-store-provider";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import {
-  CreditCardIcon,
-  DeleteIcon,
-  ShoppingCartIcon,
-  Trash2,
-} from "lucide-react";
-import Image from "next/image";
-import { formatCurrency, formatNumber } from "@/lib/formatters";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,6 +11,34 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { formatCurrency, formatNumber } from "@/lib/formatters";
+import { useCartStore } from "@/store/cart-store-provider";
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CreditCardIcon,
+  ShoppingCartIcon,
+  Trash2,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function TableCartReview() {
   const supplements = useCartStore((state) => state.supplements);
@@ -82,6 +90,9 @@ export default function TableCartReview() {
                       alt={food.name}
                       fill
                       style={{ objectFit: "cover" }}
+                      sizes={
+                        "(max-width: 640px) 10vw, (max-width: 768px) 20vw, 30vw"
+                      }
                     />
                   </div>
                 </Link>
@@ -95,23 +106,24 @@ export default function TableCartReview() {
               <TableCell>{formatCurrency(food.priceInDinars)}</TableCell>
               <TableCell>x {formatNumber(food.quantity)}</TableCell>
               <TableCell className="text-right">
-                <div>
-                  <TableCartReviewDeleteAction
-                    supplementId={food.id}
-                    supplementName={food.name}
-                  />
-                </div>
+                <TableCartReviewActions
+                  supplementId={food.id}
+                  supplementName={food.name}
+                  supplementStock={food.stock}
+                />
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
       <div className="flex items-center justify-end gap-x-4 border-t pt-2">
         <span>Total:</span>
         <span className="font-semibold">
           {formatCurrency(totalAmountInDinars)}
         </span>
       </div>
+
       <div className="w-full flex items-center justify-center">
         <Button asChild size={"lg"} className="h-12 w-full">
           <Link href={"/checkout"} className="space-x-4">
@@ -124,38 +136,100 @@ export default function TableCartReview() {
   );
 }
 
+type TableCartReviewActionsProps = {
+  supplementId: string;
+  supplementName: string;
+  supplementStock: number;
+};
+
+function TableCartReviewActions(props: TableCartReviewActionsProps) {
+  return (
+    <AlertDialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"ghost"} size={"icon"}>
+            <DotsVerticalIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {/* <DropdownMenuItem asChild>
+            <TableCartReviewQuantityAction
+              supplementId={props.supplementId}
+              supplementStock={props.supplementStock}
+            />
+          </DropdownMenuItem> */}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <AlertDialogTrigger className="focus:bg-destructive focus:text-destructive-foreground text-destructive gap-x-2 w-full flex items-center justify-center py-2">
+              <Trash2 size={20} />
+              <span>Delete</span>
+            </AlertDialogTrigger>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <TableCartReviewDeleteAction {...props} />
+    </AlertDialog>
+  );
+}
+
+function TableCartReviewQuantityAction({
+  supplementId,
+  supplementStock,
+}: Omit<TableCartReviewActionsProps, "supplementName">) {
+  const { decrease, quantity, increase } = useCartStore((state) => ({
+    decrease: state.decreaseQuantity,
+    quantity:
+      state.supplements.find((food) => food.id === supplementId)?.quantity || 0,
+    increase: state.increaseQuantity,
+  }));
+
+  return (
+    <div className="flex items-center justify-between">
+      <Button
+        onClick={() => decrease(supplementId)}
+        disabled={quantity <= 1}
+        variant={"ghost"}
+        size={"icon"}
+      >
+        <ArrowLeftIcon />
+      </Button>
+      <span>{quantity}</span>
+      <Button
+        onClick={() => increase(supplementId)}
+        disabled={quantity >= supplementStock}
+        variant={"ghost"}
+        size={"icon"}
+      >
+        <ArrowRightIcon />
+      </Button>
+    </div>
+  );
+}
+
 function TableCartReviewDeleteAction({
   supplementId,
   supplementName,
-}: {
-  supplementId: string;
-  supplementName: string;
-}) {
+}: TableCartReviewActionsProps) {
   const removeSupplement = useCartStore((state) => state.removeSupplement);
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>
-        <Trash2 size={20} />
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            You are going to remove {supplementName} from your shopping cart.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Button
-              variant={"destructive"}
-              onClick={() => removeSupplement(supplementId)}
-            >
-              Yes
-            </Button>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+        <AlertDialogDescription>
+          You are going to remove {supplementName} from your shopping cart.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction asChild>
+          <Button
+            variant={"destructive"}
+            onClick={() => removeSupplement(supplementId)}
+          >
+            Yes
+          </Button>
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
   );
 }

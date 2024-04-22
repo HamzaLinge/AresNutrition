@@ -28,13 +28,14 @@ import { usePathname } from "next/navigation";
 import { ComponentProps } from "react";
 
 export default function LayoutCustomer() {
+  const pathname = usePathname();
   return (
     <header className="grid grid-cols-3 bg-accent justify-items-center place-items-center shadow sticky top-0 left-0 z-10">
       <NavMobile />
       <p>Logo</p>
       <NavigationDesktop />
       <div>
-        <ShoppingCart />
+        {!["/checkout", "/cart-review"].includes(pathname) && <ShoppingCart />}
       </div>
     </header>
   );
