@@ -56,28 +56,6 @@ export async function addSupplement(prevState: unknown, formData: FormData) {
     // Optionally delete the file after upload to clean up space
     await fs.unlink(tmpFilePath);
   }
-  // try {
-  //   const publicDirPath = path.join(process.cwd(), "public");
-
-  //   // console.log({ supplementsPath: path.join(publicDirPath, "supplements") });
-
-  //   await fs.mkdir(path.join(publicDirPath, "supplements"), {
-  //     recursive: true,
-  //   });
-
-  //   for (let i = 0; i < data.thumbnails.length; i++) {
-  //     const thumbnailPath = `/supplements/${crypto.randomUUID()}-${data.thumbnails[i].name}`;
-  //     await fs.writeFile(
-  //       path.join(publicDirPath, thumbnailPath),
-  //       Buffer.from(await data.thumbnails[i].arrayBuffer())
-  //     );
-  //     // const thumbnailPath = await uploadImage(data.thumbnails[i]);
-  //     thumbnailPaths.push(thumbnailPath);
-  //   }
-  // } catch (error) {
-  //   console.error({ fileError: error });
-  //   throw new Error("Parameter is not a number!");
-  // }
 
   await db.supplement.create({
     data: {

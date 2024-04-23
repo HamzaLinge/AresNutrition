@@ -14,9 +14,9 @@ import {
 import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { Prisma } from "@prisma/client";
+import { Metadata } from "next";
 import { Suspense } from "react";
 import Filter from "./_components/Filter";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Shop - Ares Store",
@@ -24,29 +24,31 @@ export const metadata: Metadata = {
     "Shop Supplement Food for Athlete Enthusiasts at Ares Gym Mostaganem",
 };
 
-const getSupplements = (searchParams: Record<string, string>) => {
-  const whereClause: Prisma.SupplementWhereInput = {
-    isAvailableForPurchase: true,
-  };
-
-  if (searchParams.categoryId) {
-    whereClause.categoryId = searchParams.categoryId;
-  }
-
-  if (searchParams.minPrice && searchParams.maxPrice) {
-    whereClause.priceInDinars = {
-      gte: parseInt(searchParams.minPrice, 10),
-      lte: parseInt(searchParams.maxPrice, 10),
+const getSupplements = cache(
+  (searchParams: Record<string, string>) => {
+    const whereClause: Prisma.SupplementWhereInput = {
+      isAvailableForPurchase: true,
     };
-  }
 
-  // console.log("Querying Supplements with:", whereClause);
+    if (searchParams.categoryId) {
+      whereClause.categoryId = searchParams.categoryId;
+    }
 
-  return db.supplement.findMany({
-    where: whereClause,
-    orderBy: { createdAt: "desc" },
-  });
-};
+    if (searchParams.minPrice && searchParams.maxPrice) {
+      whereClause.priceInDinars = {
+        gte: parseInt(searchParams.minPrice, 10),
+        lte: parseInt(searchParams.maxPrice, 10),
+      };
+    }
+
+    return db.supplement.findMany({
+      where: whereClause,
+      orderBy: { createdAt: "desc" },
+    });
+  },
+  ["/supplements", "getSupplements"],
+  { revalidate: 60 * 60 * 24 }
+);
 
 export default function SupplementsPage({
   searchParams,

@@ -29,7 +29,7 @@ export default function PurchaseFallback(props: PurchaseFallbackProps) {
 
   useEffect(() => {
     if (isSuccess) clearStore();
-  }, [isSuccess]);
+  }, [isSuccess, clearStore]);
 
   if (!isSuccess) <FailureFallback />;
 
