@@ -41,10 +41,10 @@ model OrderSupplement {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   orderId String @db.ObjectId
-  orders  Order  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Restrict)
 
   supplementId String     @db.ObjectId
-  supplements  Supplement @relation(fields: [supplementId], references: [id], onDelete: Restrict)
+  supplement   Supplement @relation(fields: [supplementId], references: [id], onDelete: Restrict)
 
   priceInDinars Int
   quantity      Int

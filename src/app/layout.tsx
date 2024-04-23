@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "@/components/ui/sonner";
 
 import { CartStoreProvider } from "@/store/cart-store-provider";
 import "./globals.css";
@@ -30,6 +31,7 @@ export default function RootLayout({
         )}
       >
         <CartStoreProvider>{children}</CartStoreProvider>
+        <Toaster position="bottom-center" richColors />
       </body>
     </html>
   );

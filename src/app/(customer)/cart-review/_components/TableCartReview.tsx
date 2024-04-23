@@ -68,7 +68,7 @@ export default function TableCartReview() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>
+            <TableHead className="w-20">
               <span className="sr-only">Thumbnail</span>
             </TableHead>
             <TableHead className="grow">Name</TableHead>
@@ -152,12 +152,10 @@ function TableCartReviewActions(props: TableCartReviewActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {/* <DropdownMenuItem asChild>
-            <TableCartReviewQuantityAction
-              supplementId={props.supplementId}
-              supplementStock={props.supplementStock}
-            />
-          </DropdownMenuItem> */}
+          <TableCartReviewQuantityAction
+            supplementId={props.supplementId}
+            supplementStock={props.supplementStock}
+          />
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <AlertDialogTrigger className="focus:bg-destructive focus:text-destructive-foreground text-destructive gap-x-2 w-full flex items-center justify-center py-2">
