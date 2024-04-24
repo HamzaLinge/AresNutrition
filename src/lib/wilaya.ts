@@ -16,15 +16,25 @@ export async function getWilayas() {
       ? `https://${process.env.VERCEL_URL as string}`
       : "http://localhost:3000") + "/data/wilayas.json";
 
-  const responseWilayas = await fetch(fullUrl, {
-    headers: { Accept: "application/json" },
-  });
-  if (!responseWilayas.ok) {
-    const errWilayas = await responseWilayas.json();
-    console.error({ errWilayas });
-    throw new Error("Error with getting wilayas");
-  }
+  console.log({ fullUrl });
 
-  const wilayas: Wilaya[] = await responseWilayas.json();
-  return wilayas;
+  try {
+    const responseWilayas = await fetch(fullUrl, {
+      headers: { Accept: "application/json" },
+    });
+    if (!responseWilayas.ok) {
+      const errWilayas = await responseWilayas.text();
+      console.error({ errWilayas });
+      throw new Error("Error with getting wilayas");
+    }
+
+    const wilayasRaw = await responseWilayas.text();
+    console.log({ wilayasRaw });
+
+    const wilayas: Wilaya[] = JSON.parse(wilayasRaw);
+    return wilayas;
+  } catch (err) {
+    console.error("Error GET 'wilayas.json':" + err);
+    throw err;
+  }
 }

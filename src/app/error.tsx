@@ -18,17 +18,14 @@ export default function Error({
 
       <div className="space-y-4">
         <p className="text-xl text-muted-foreground">{error.message}</p>
-        <Button size={"lg"} onClick={() => reset()} className="w-full max-w-lg">
-          Try again
-        </Button>
-        <Button
-          size={"lg"}
-          variant={"secondary"}
-          asChild
-          className="w-full max-w-lg"
-        >
-          <Link href="/supplements">Return to Shop</Link>
-        </Button>
+        <div className="flex flex-col gap-y-2 w-full max-w-md">
+          <Button size={"lg"} onClick={() => reset()}>
+            Try again
+          </Button>
+          <Button size={"lg"} variant={"secondary"} asChild>
+            <Link href="/supplements">Return to Shop</Link>
+          </Button>
+        </div>
       </div>
     </div>
   );
