@@ -10,31 +10,31 @@ export type Wilaya = {
   population_proper: string; // Similarly treated as string as above
 };
 
-export async function getWilayas() {
-  const fullUrl =
-    (process.env.NODE_ENV === "production"
-      ? `https://${process.env.VERCEL_URL as string}`
-      : "http://localhost:3000") + "/data/wilayas.json";
+// export async function getWilayas() {
+//   const fullUrl =
+//     (process.env.NODE_ENV === "production"
+//       ? `https://${process.env.VERCEL_URL as string}`
+//       : "http://localhost:3000") + "/data/wilayas.json";
 
-  console.log({ fullUrl });
+//   console.log({ fullUrl });
 
-  try {
-    const responseWilayas = await fetch(fullUrl, {
-      headers: { Accept: "application/json" },
-    });
-    if (!responseWilayas.ok) {
-      const errWilayas = await responseWilayas.text();
-      console.error({ errWilayas });
-      throw new Error("Error with getting wilayas");
-    }
+//   try {
+//     const responseWilayas = await fetch(fullUrl);
+//     if (!responseWilayas.ok) {
+//       const errorBody = await responseWilayas.text(); // Get full response body
+//       console.error("HTTP Status:", responseWilayas.status);
+//       console.error("Response Headers:", responseWilayas.headers);
+//       console.error("Response Body:", errorBody.substring(0, 500)); // Print first 500 chars of the response
+//       throw new Error("Error with getting wilayas");
+//     }
 
-    const wilayasRaw = await responseWilayas.text();
-    console.log({ wilayasRaw });
+//     const wilayasRaw = await responseWilayas.text();
+//     // console.log({ wilayasRaw });
 
-    const wilayas: Wilaya[] = JSON.parse(wilayasRaw);
-    return wilayas;
-  } catch (err) {
-    console.error("Error GET 'wilayas.json':" + err);
-    throw err;
-  }
-}
+//     const wilayas: Wilaya[] = JSON.parse(wilayasRaw);
+//     return wilayas;
+//   } catch (err) {
+//     console.error("Error GET wilayas caught:", err);
+//     throw err;
+//   }
+// }
