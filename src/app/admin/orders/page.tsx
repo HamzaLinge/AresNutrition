@@ -10,6 +10,7 @@ import {
 import db from "@/db/db";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
+import OrderTableActions from "@/app/admin/orders/_components/OrderTableActions";
 
 export default async function AdminOrdersPage() {
   return (
@@ -22,14 +23,6 @@ export default async function AdminOrdersPage() {
 
 async function OrdersTable() {
   const orders = await db.order.findMany({
-    select: {
-      id: true,
-      amountInDinars: true,
-      shippingName: true,
-      shippingWilaya: true,
-      shippingPhone: true,
-      paymentStatus: true,
-    },
     orderBy: { updatedAt: "desc" },
   });
 
@@ -39,36 +32,40 @@ async function OrdersTable() {
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead>Status</TableHead>
           <TableHead>Amount</TableHead>
           <TableHead>Shipping</TableHead>
-          <TableHead>Status</TableHead>
+          <TableHead>
+            <span className="sr-only">Actions</span>
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          {orders.map((order) => (
-            <>
-              <TableCell>{formatCurrency(order.amountInDinars)}</TableCell>
-              <TableCell className="grid grid-cols-3 gap-x-2">
-                <span>{order.shippingName}</span>
-                <span>{order.shippingWilaya}</span>
-                <span>{order.shippingPhone}</span>
-              </TableCell>
-              <TableCell>
-                <span
-                  className={cn(
-                    "p-1 rounded",
-                    order.paymentStatus === "paid"
-                      ? "bg-muted-foreground"
-                      : "bg-destructive/75"
-                  )}
-                >
-                  {order.paymentStatus}
-                </span>
-              </TableCell>
-            </>
-          ))}
-        </TableRow>
+        {orders.map((order) => (
+          <TableRow key={order.id}>
+            <TableCell>
+              <span
+                className={cn(
+                  "p-2 rounded uppercase text-primary-foreground",
+                  order.paymentStatus === "paid"
+                    ? "bg-muted-foreground"
+                    : "bg-destructive/75"
+                )}
+              >
+                {order.paymentStatus}
+              </span>
+            </TableCell>
+            <TableCell>{formatCurrency(order.amountInDinars)}</TableCell>
+            <TableCell className="space-x-4">
+              <span>{order.shippingName}</span>
+              <span>{order.shippingWilaya}</span>
+              <span>{order.shippingPhone}</span>
+            </TableCell>
+            <TableCell>
+              <OrderTableActions order={order} />
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

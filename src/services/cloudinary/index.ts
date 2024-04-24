@@ -26,6 +26,12 @@ export const cloudinaryUploadImage = async (imagePath: string) => {
   }
 };
 
+export const cloudinaryDeleteImage = async (imagePath: string) => {
+  const publicId = imagePath.split("/").pop();
+  if (!publicId) return;
+  await cloudinary.uploader.destroy(publicId);
+};
+
 export const getAssetInfo = async (publicId: string) => {
   const options = {
     colors: true,

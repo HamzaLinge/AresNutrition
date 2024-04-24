@@ -29,11 +29,17 @@ import { ComponentProps } from "react";
 
 export default function LayoutCustomer() {
   const pathname = usePathname();
+  const links = [
+    { path: "/", label: "Home" },
+    { path: "/supplements", label: "Shop" },
+    { path: "/contact-us", label: "Contact Us" },
+    { path: "/about-us", label: "About Us" },
+  ];
   return (
     <header className="grid grid-cols-3 bg-accent justify-items-center place-items-center shadow sticky top-0 left-0 z-10">
-      <NavMobile />
+      <NavMobile links={links} />
       <p>Logo</p>
-      <NavigationDesktop />
+      <NavigationDesktop links={links} />
       <div>
         {!["/checkout", "/cart-review"].includes(pathname) && <ShoppingCart />}
       </div>
@@ -41,12 +47,18 @@ export default function LayoutCustomer() {
   );
 }
 
-function NavigationDesktop() {
+type LinkList = {
+  links: { path: string; label: string }[];
+};
+
+function NavigationDesktop({ links }: LinkList) {
   return (
     <nav className="hidden items-center lg:flex">
-      <NavDesktopLink href={"/"}> Home</NavDesktopLink>
-      <NavDesktopLink href="/supplements">Shop</NavDesktopLink>
-      <NavDesktopLink href="/orders">My Orders</NavDesktopLink>
+      {links.map((link) => (
+        <NavDesktopLink key={link.path} href={link.path}>
+          {link.label}
+        </NavDesktopLink>
+      ))}
     </nav>
   );
 }
@@ -64,7 +76,7 @@ function NavDesktopLink(props: Omit<ComponentProps<typeof Link>, "className">) {
   );
 }
 
-function NavMobile() {
+function NavMobile({ links }: LinkList) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -82,9 +94,11 @@ function NavMobile() {
           </SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col mt-10 w-full divide-y">
-          <NavMobileLink href={"/"}> Home</NavMobileLink>
-          <NavMobileLink href="/supplements">Shop</NavMobileLink>
-          <NavMobileLink href="/orders">My Orders</NavMobileLink>
+          {links.map((link) => (
+            <NavMobileLink key={link.path} href={link.path}>
+              {link.label}
+            </NavMobileLink>
+          ))}
         </nav>
       </SheetContent>
     </Sheet>

@@ -8,7 +8,10 @@ import { notFound, redirect } from "next/navigation";
 import path from "path";
 import { z } from "zod";
 import os from "os";
-import { cloudinaryUploadImage } from "@/services/cloudinary";
+import {
+  cloudinaryDeleteImage,
+  cloudinaryUploadImage,
+} from "@/services/cloudinary";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 const thumbnailSchema = fileSchema.refine(
@@ -98,16 +101,6 @@ export async function updateSupplement(
 
   if (supplement == null) return notFound();
 
-  // let thumbnailPath = supplement.thumbnail;
-  // if (data.thumbnail != null && data.thumbnail.size > 0) {
-  //   await fs.unlink(`public${supplement.thumbnail}`);
-  //   thumbnailPath = `/supplements/${crypto.randomUUID()}-${data.thumbnail.name}`;
-  //   await fs.writeFile(
-  //     `public${thumbnailPath}`,
-  //     Buffer.from(await data.thumbnail.arrayBuffer())
-  //   );
-  // }
-
   await db.supplement.update({
     where: { id: supplementId },
     data: {
@@ -146,9 +139,9 @@ export async function deleteSupplement(id: string) {
 
   if (supplement == null) return notFound();
 
-  supplement.thumbnailPaths.forEach((filePath) =>
-    fs.unlink(`public${filePath}`)
-  );
+  for (const imgPath of supplement.thumbnailPaths) {
+    await cloudinaryDeleteImage(imgPath);
+  }
 
   revalidatePath("/");
   revalidatePath("/supplements");

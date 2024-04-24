@@ -16,7 +16,7 @@ import { cache } from "@/lib/cache";
 import { Prisma } from "@prisma/client";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import Filter from "./_components/Filter";
+import Filter from "@/app/(customer)/supplements/_components/Filter";
 
 export const metadata: Metadata = {
   title: "Shop - Ares Store",

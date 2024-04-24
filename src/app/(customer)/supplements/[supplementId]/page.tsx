@@ -1,4 +1,13 @@
 import AddToCart from "@/app/(customer)/_components/AddToCart";
+import { SupplementCard } from "@/components/SupplementCard";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import {
   Carousel,
   CarouselContent,
@@ -8,25 +17,17 @@ import {
 } from "@/components/ui/carousel";
 import db from "@/db/db";
 import { formatCurrency } from "@/lib/formatters";
+import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { SupplementCard } from "@/components/SupplementCard";
-import { Metadata } from "next";
+import { cache } from "react";
 
-export const metadata: Metadata = {
-  title: "Supplement - Ares Store",
-  description: "Discover the Supplement Food that suits you the best",
+type MetaDataProps = {
+  params: { supplementId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
-async function getSupplementData(supplementId: string) {
+const getSupplementData = cache(async (supplementId: string) => {
   const supplement = await db.supplement.findUnique({
     where: { id: supplementId },
     include: { category: true },
@@ -39,6 +40,18 @@ async function getSupplementData(supplementId: string) {
   });
 
   return { supplement, relatedSupplements };
+});
+
+export async function generateMetadata(
+  { params }: MetaDataProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { supplement } = await getSupplementData(params.supplementId);
+
+  return {
+    title: `${supplement.name} - Ares Store`,
+    description: supplement.description,
+  };
 }
 
 export default async function SupplementPage({
@@ -68,7 +81,7 @@ export default async function SupplementPage({
       </Breadcrumb>
 
       <div className="flex flex-col md:flex-row gap-8 bg-card shadow p-8 rounded-xl border text-card-foreground">
-        <Carousel className="w-full md:w-1/3">
+        <Carousel className="w-full md:w-1/2 space-y-2">
           <CarouselContent>
             {supplement.thumbnailPaths.map((imgPath) => (
               <CarouselItem key={imgPath}>
@@ -86,8 +99,10 @@ export default async function SupplementPage({
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <div className="flex items-center justify-center gap-x-2">
+            <CarouselPrevious className="" />
+            <CarouselNext className=" " />
+          </div>
         </Carousel>
 
         <div className="space-y-4 lg:space-y-10">

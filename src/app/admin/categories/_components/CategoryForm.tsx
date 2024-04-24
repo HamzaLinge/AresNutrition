@@ -28,7 +28,7 @@ export default function CategoryForm({
           required
           defaultValue={category?.name}
         />
-        {error.name && <div className="text-destructive">{error.name}</div>}
+        {error?.name && <div className="text-destructive">{error.name}</div>}
       </div>
       <SubmitButton />
     </form>
