@@ -16,7 +16,9 @@ export async function getWilayas() {
       ? `https://${process.env.VERCEL_URL as string}`
       : "http://localhost:3000") + "/data/wilayas.json";
 
-  const responseWilayas = await fetch(fullUrl);
+  const responseWilayas = await fetch(fullUrl, {
+    headers: { Accept: "application/json" },
+  });
   if (!responseWilayas.ok) {
     const errWilayas = await responseWilayas.json();
     console.error({ errWilayas });
