@@ -39,7 +39,11 @@ export async function createOrder(
     amount: amountInDinars,
     currency: "dzd",
     locale: "en",
-    webhook_endpoint: process.env.CHARGILY_WEBHOOK_ENDPOINT as string,
+    // webhook_endpoint: process.env.CHARGILY_WEBHOOK_ENDPOINT as string,
+    webhook_endpoint:
+      process.env.NODE_ENV !== "production"
+        ? (process.env.CHARGILY_WEBHOOK_ENDPOINT as string)
+        : `https://${process.env.VERCEL_URL}/api/chargily/webhook`,
     success_url: process.env.CHARGILY_FALLBACK_URL as string,
     failure_url: process.env.CHARGILY_FALLBACK_URL as string,
   });

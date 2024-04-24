@@ -8,13 +8,30 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getWilayas } from "@/lib/wilaya";
+import { cache } from "@/lib/cache";
+import { Wilaya } from "@/lib/wilaya.type";
+import fs from "fs/promises";
 import { Metadata } from "next";
+import path from "path";
 
 export const metadata: Metadata = {
   title: "Checkout - Ares Store",
   description: "Proceed to checkout by providing your shipping information",
 };
+
+const getWilayas = cache(async () => {
+  const filePath = path.join(process.cwd(), "src", "data", "wilayas.json");
+
+  try {
+    const buffer = await fs.readFile(filePath, { encoding: "utf-8" });
+    const wilayas: Wilaya[] = JSON.parse(buffer);
+
+    return wilayas;
+  } catch (error) {
+    console.error("Error reading wilayas", error);
+    throw new Error("Error reading wilayas");
+  }
+}, ["/checkout", "getWilayas"]);
 
 export default async function CheckoutPage() {
   const wilayas = await getWilayas();

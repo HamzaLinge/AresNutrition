@@ -1,6 +1,7 @@
 "use client"; // Error components must be Client Components
 
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Error({
   error,
@@ -17,9 +18,14 @@ export default function Error({
 
       <div className="space-y-4">
         <p className="text-xl text-muted-foreground">{error.message}</p>
-        <Button size={"lg"} onClick={() => reset()}>
-          Try again
-        </Button>
+        <div className="flex flex-col gap-y-2 w-full max-w-md">
+          <Button size={"lg"} onClick={() => reset()}>
+            Try again
+          </Button>
+          <Button size={"lg"} variant={"secondary"} asChild>
+            <Link href="/supplements">Return to Shop</Link>
+          </Button>
+        </div>
       </div>
     </div>
   );
