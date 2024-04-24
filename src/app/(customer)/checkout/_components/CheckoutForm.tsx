@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
-import { Wilaya } from "@/lib/wilaya";
 import { useCartStore } from "@/store/cart-store-provider";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { Loader2Icon, ShoppingCartIcon } from "lucide-react";
@@ -29,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Wilaya } from "@/lib/wilaya.type";
 
 const EXPEDITION_FEES = 500;
 

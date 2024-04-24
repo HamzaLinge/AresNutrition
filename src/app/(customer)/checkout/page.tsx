@@ -9,9 +9,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { cache } from "@/lib/cache";
-import { Wilaya } from "@/lib/wilaya";
+import { Wilaya } from "@/lib/wilaya.type";
+import fs from "fs/promises";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import path from "path";
 
 export const metadata: Metadata = {
   title: "Checkout - Ares Store",
@@ -19,24 +20,16 @@ export const metadata: Metadata = {
 };
 
 const getWilayas = cache(async () => {
-  const wilayasUrl =
-    (process.env.NODE_ENV !== "production"
-      ? "http://localhost:3000"
-      : `https://${process.env.VERCEL_URL}`) + "/api/wilayas";
-
-  console.log({ wilayasUrl });
+  const filePath = path.join(process.cwd(), "src", "data", "wilayas.json");
 
   try {
-    const res = await fetch(wilayasUrl);
-    if (!res.ok) {
-      console.error("Error getting wilayas");
-      return notFound();
-    }
-    const wilayas: Wilaya[] = await res.json();
+    const buffer = await fs.readFile(filePath, { encoding: "utf-8" });
+    const wilayas: Wilaya[] = JSON.parse(buffer);
+
     return wilayas;
   } catch (error) {
-    console.error("Something wrong with getting wilayas", error);
-    throw new Error("Error getting wilayas");
+    console.error("Error reading wilayas", error);
+    throw new Error("Error reading wilayas");
   }
 }, ["/checkout", "getWilayas"]);
 
