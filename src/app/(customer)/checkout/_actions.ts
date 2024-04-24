@@ -41,7 +41,7 @@ export async function createOrder(
     locale: "en",
     // webhook_endpoint: process.env.CHARGILY_WEBHOOK_ENDPOINT as string,
     webhook_endpoint:
-      process.env.NODE_ENV !== "production"
+      process.env.VERCEL_ENV !== "production"
         ? (process.env.CHARGILY_WEBHOOK_ENDPOINT as string)
         : `https://${process.env.VERCEL_URL}/api/chargily/webhook`,
     success_url: process.env.CHARGILY_FALLBACK_URL as string,
