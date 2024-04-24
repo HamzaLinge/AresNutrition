@@ -1,7 +1,7 @@
-import { Supplement } from "@prisma/client";
 import db from "@/db/db";
 import { ChargilyWebhookEvent } from "@/services/chargily/types";
 import { verifySignature } from "@/services/chargily/utils";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export async function POST(req: Request) {
@@ -57,14 +57,20 @@ export async function POST(req: Request) {
         })
       );
 
+      revalidatePath("/");
+      revalidatePath("/supplements");
+
       break;
+
     case "checkout.failed":
       // Handle the payment failure
       await db.order.update({
         where: { chargilyCheckoutId: webhook.data.id },
         data: { chargilyWebhookId: webhook.id, paymentStatus: "failed" },
       });
+
       break;
+
     default:
       console.warn("Received unsupported event type");
   }

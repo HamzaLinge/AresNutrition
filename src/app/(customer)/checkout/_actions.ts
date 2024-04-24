@@ -29,10 +29,11 @@ export async function createOrder(
   }
   const data = result.data;
 
-  const amountInDinars = supplements.reduce(
-    (acc, current) => (acc = acc + current.priceInDinars * current.quantity),
-    0
-  );
+  const amountInDinars =
+    supplements.reduce(
+      (acc, current) => (acc = acc + current.priceInDinars * current.quantity),
+      0
+    ) + Number(process.env.SHIPPING_COST || 500);
 
   const chargilyCheckout = await createChargilyCheckout({
     amount: amountInDinars,

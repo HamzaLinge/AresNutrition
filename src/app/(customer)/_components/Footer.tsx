@@ -24,6 +24,7 @@ export default function Footer() {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Company</h3>
           <div className="flex flex-col gap-y-2">
+            <Link href={"/admin"}>Admin</Link>
             <Link href={"/about-us"}>About Us</Link>
             <Link href={"/contact-us"}>Contact Us</Link>
           </div>
@@ -32,7 +33,7 @@ export default function Footer() {
           <h3 className="text-lg font-semibold">Social Network</h3>
           <div className="flex gap-x-2">
             <Link
-              href={"/https://www.instagram.com/ares_gym27/"}
+              href={"https://www.instagram.com/ares_gym27/"}
               target="_blank"
             >
               <FaInstagram size={30} />

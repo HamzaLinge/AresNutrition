@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getWilayas } from "@/lib/wilaya";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,7 +16,9 @@ export const metadata: Metadata = {
   description: "Proceed to checkout by providing your shipping information",
 };
 
-export default function CheckoutPage() {
+export default async function CheckoutPage() {
+  const wilayas = await getWilayas();
+
   return (
     <div className="container my-6 flex flex-col items-center gap-y-10">
       <Breadcrumb>
@@ -36,7 +39,7 @@ export default function CheckoutPage() {
 
       <PageHeader>Checkout</PageHeader>
 
-      <CheckoutForm />
+      <CheckoutForm wilayas={wilayas} />
     </div>
   );
 }

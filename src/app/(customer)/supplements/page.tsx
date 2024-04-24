@@ -14,9 +14,9 @@ import {
 import db from "@/db/db";
 import { cache } from "@/lib/cache";
 import { Prisma } from "@prisma/client";
-import { Suspense } from "react";
-import Filter from "./_components/Filter";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import Filter from "@/app/(customer)/supplements/_components/Filter";
 
 export const metadata: Metadata = {
   title: "Shop - Ares Store",
@@ -41,15 +41,13 @@ const getSupplements = cache(
       };
     }
 
-    // console.log("Querying Supplements with:", whereClause);
-
     return db.supplement.findMany({
       where: whereClause,
       orderBy: { createdAt: "desc" },
     });
   },
-  ["/supplements", "getSupplements"]
-  //   { revalidate: 60 * 60 * 24 }
+  ["/supplements", "getSupplements"],
+  { revalidate: 60 * 60 * 24 }
 );
 
 export default function SupplementsPage({
