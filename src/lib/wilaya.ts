@@ -13,14 +13,14 @@ export type Wilaya = {
 export async function getWilayas() {
   const fullUrl =
     (process.env.NODE_ENV === "production"
-      ? (process.env.VERCEL_URL as string)
+      ? `https://${process.env.VERCEL_URL as string}`
       : "http://localhost:3000") + "/data/wilayas.json";
 
   const responseWilayas = await fetch(fullUrl);
   if (!responseWilayas.ok) {
     const errWilayas = await responseWilayas.json();
     console.error({ errWilayas });
-    throw new Error("Something went wrong when getting Wilayas list.");
+    throw new Error("Error with getting wilayas");
   }
 
   const wilayas: Wilaya[] = await responseWilayas.json();
